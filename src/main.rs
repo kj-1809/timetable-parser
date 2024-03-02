@@ -184,7 +184,8 @@ fn main() {
                         classes_for_subgroup_day.push(Class {
                             name: matrix[row][j].clone(),
                             location: matrix[row + 1][j].clone(),
-                            professor: matrix[row + 1][j + (2 * group_sizes[current_group] as usize) - 1]
+                            professor: matrix[row + 1]
+                                [j + (2 * group_sizes[current_group] as usize) - 1]
                                 .clone(),
                             slot: ((adjusted_row) / 2),
                         });
@@ -196,14 +197,19 @@ fn main() {
                             classes_data.get_mut(&sub_group.clone()).unwrap();
                         let classes_for_subgroup_day =
                             classes_for_subgroup.get_mut(&day_string).unwrap();
+
+                        let mut new_name = matrix[row][j].clone();
+                        new_name.pop();
+                        new_name.push('P');
+
                         classes_for_subgroup_day.push(Class {
-                            name: matrix[row][j].clone(),
+                            name: new_name.clone(),
                             location: matrix[row + 1][j].clone(),
                             professor: matrix[row + 2][j].clone(),
                             slot: ((adjusted_row) / 2),
                         });
                         classes_for_subgroup_day.push(Class {
-                            name: matrix[row][j].clone(),
+                            name: new_name.clone(),
                             location: matrix[row + 1][j].clone(),
                             professor: matrix[row + 2][j].clone(),
                             slot: ((adjusted_row) / 2) + 1,
