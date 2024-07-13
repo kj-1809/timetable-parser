@@ -1,1 +1,4 @@
 /target
+.env
+dataset.xlsx
+*.json

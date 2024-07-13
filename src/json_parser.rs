@@ -3,14 +3,14 @@ use calamine::{open_workbook, DataType, Reader, Xlsx};
 use std::{collections::HashMap, fs::File, io::Write};
 
 pub fn parse_timetable(
-    group_sizes: Vec<u32>,
+    group_sizes: &Vec<u32>,
     row_start: usize,
     row_end: usize,
     col_start: usize,
     col_end: usize,
     worksheet_name: &str,
     output_filename: &str,
-    excel_filename: &str
+    excel_filename: &str,
 ) {
     let mut matrix: Vec<Vec<String>> = Vec::new();
     let mut classes_data: HashMap<String, HashMap<String, Vec<Class>>> = HashMap::new();
@@ -29,6 +29,7 @@ pub fn parse_timetable(
         for (i, row) in range.rows().enumerate() {
             let mut temp: Vec<String> = Vec::new();
             if i < row_start || i > row_end {
+                println!("ii : {i}");
                 continue;
             }
             for (j, ele) in row.iter().enumerate() {
@@ -44,12 +45,15 @@ pub fn parse_timetable(
             matrix.push(temp);
         }
     }
+
     let n = matrix.len();
     let m = matrix[0].len();
+    println!("n : {n} m : {m}");
+    println!("{:?}", matrix[0]);
 
     // get the groups
     let mut pos = 0;
-    for i in &group_sizes {
+    for i in group_sizes {
         let mut group: Vec<String> = Vec::new();
         for _ in 0..i.clone() {
             group.push(matrix[0][pos].clone());
@@ -57,6 +61,8 @@ pub fn parse_timetable(
         }
         groups.push(group);
     }
+    println!("hehe groups");
+    println!("{:?}", groups);
 
     // initialize empty hashmaps for all groups
     for i in &groups {
