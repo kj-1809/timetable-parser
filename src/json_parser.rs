@@ -1,6 +1,7 @@
 use crate::model::Class;
 use calamine::{open_workbook, DataType, Reader, Xlsx};
 use std::{collections::HashMap, fs::File, io::Write};
+use crate::database::create_groups;
 
 pub fn parse_timetable(
     group_sizes: &Vec<u32>,
@@ -25,8 +26,7 @@ pub fn parse_timetable(
 
     let mut workbook: Xlsx<_> = open_workbook(excel_filename).unwrap();
 
-    if let Ok(range) = workbook.worksheet_range(worksheet_name) {
-        for (i, row) in range.rows().enumerate() {
+    if let Ok(range) = workbook.worksheet_range(worksheet_name) { for (i, row) in range.rows().enumerate() {
             let mut temp: Vec<String> = Vec::new();
             if i < row_start || i > row_end {
                 println!("ii : {i}");
@@ -232,6 +232,8 @@ pub fn parse_timetable(
             classes_for_subgroup_day.extend(classes_for_the_subgroup_day.clone());
         }
     }
+    
+    create_groups();
 
     let parsed_classes_data = serde_json::to_string(&classes_data).unwrap();
 

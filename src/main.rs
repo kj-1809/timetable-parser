@@ -1,7 +1,14 @@
 mod json_parser;
 mod model;
+mod database;
 
-fn main() {
+
+use dotenv::dotenv;
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>>{
+    dotenv().ok();
+
     let mut group_sizes: Vec<u32> = vec![8, 8, 5, 5, 5, 5, 5, 5, 5, 5];
     let row_start = 3;
     let row_end = 143;
@@ -11,6 +18,8 @@ fn main() {
     let output_filename = "classes_data1A.json";
     let excel_filename = "dataset.xlsx";
 
+    let pool = database::init_db().await.unwrap();
+    
     // json_parser::parse_timetable(
     //     &group_sizes,
     //     row_start,
@@ -22,16 +31,17 @@ fn main() {
     //     excel_filename,
     // );
 
-    json_parser::parse_timetable(
-        &group_sizes,
-        3,
-        143,
-        3,
-        114,
-        "1ST YEAR B ",
-        "classes_data1B.json",
-        excel_filename,
-    )
+    // json_parser::parse_timetable(
+    //     &group_sizes,
+    //     3,
+    //     143,
+    //     3,
+    //     114,
+    //     "1ST YEAR B ",
+    //     "classes_data1B.json",
+    //     excel_filename,
+    // )
+    Ok(()) 
 }
 
 
