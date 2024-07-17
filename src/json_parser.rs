@@ -1,7 +1,7 @@
+use crate::database::create_groups;
 use crate::model::Class;
 use calamine::{open_workbook, DataType, Reader, Xlsx};
 use std::{collections::HashMap, fs::File, io::Write};
-use crate::database::create_groups;
 
 pub fn parse_timetable(
     group_sizes: &Vec<u32>,
@@ -12,7 +12,7 @@ pub fn parse_timetable(
     worksheet_name: &str,
     output_filename: &str,
     excel_filename: &str,
-) {
+) -> HashMap<String, HashMap<String, Vec<Class>>> {
     let mut matrix: Vec<Vec<String>> = Vec::new();
     let mut classes_data: HashMap<String, HashMap<String, Vec<Class>>> = HashMap::new();
     let mut groups: Vec<Vec<String>> = Vec::new();
@@ -26,10 +26,10 @@ pub fn parse_timetable(
 
     let mut workbook: Xlsx<_> = open_workbook(excel_filename).unwrap();
 
-    if let Ok(range) = workbook.worksheet_range(worksheet_name) { for (i, row) in range.rows().enumerate() {
+    if let Ok(range) = workbook.worksheet_range(worksheet_name) {
+        for (i, row) in range.rows().enumerate() {
             let mut temp: Vec<String> = Vec::new();
             if i < row_start || i > row_end {
-                println!("ii : {i}");
                 continue;
             }
             for (j, ele) in row.iter().enumerate() {
@@ -48,8 +48,6 @@ pub fn parse_timetable(
 
     let n = matrix.len();
     let m = matrix[0].len();
-    println!("n : {n} m : {m}");
-    println!("{:?}", matrix[0]);
 
     // get the groups
     let mut pos = 0;
@@ -61,8 +59,6 @@ pub fn parse_timetable(
         }
         groups.push(group);
     }
-    println!("hehe groups");
-    println!("{:?}", groups);
 
     // initialize empty hashmaps for all groups
     for i in &groups {
@@ -88,7 +84,7 @@ pub fn parse_timetable(
                 .insert(get_day_string.get(&day).unwrap().to_string(), Vec::new());
         }
 
-        while row < n {
+       while row < n {
             let day: u32 = (row as u32 - 1) / 28;
             let day_string = get_day_string.get(&day).unwrap().to_string();
             let adjusted_row = (row as u32 - 1) % 28;
@@ -97,7 +93,6 @@ pub fn parse_timetable(
                 let class_type = matrix[row][j].chars().rev().next().unwrap();
                 let classes_for_the_day = classes_for_the_subgroup.get_mut(&day_string).unwrap();
 
-                println!("class_type  : {}", class_type);
 
                 if class_type == 'T' {
                     if matrix[row + 1][j + 1] != "0" {
@@ -202,7 +197,6 @@ pub fn parse_timetable(
                     }
                     row += 4;
                 } else {
-                    println!("row {} matrix : {}", row, matrix[row][j]);
                     std::panic!("Shit data !")
                 }
             } else {
@@ -232,14 +226,13 @@ pub fn parse_timetable(
             classes_for_subgroup_day.extend(classes_for_the_subgroup_day.clone());
         }
     }
-    
-    create_groups();
 
-    let parsed_classes_data = serde_json::to_string(&classes_data).unwrap();
+    return classes_data;
 
-    let mut file = File::create(output_filename).expect("Failed to open file");
-    file.write(parsed_classes_data.as_bytes())
-        .expect("error writing to the file");
-    println!("Successfully written to the file : {}", output_filename);
+    // let parsed_classes_data = serde_json::to_string(&classes_data).unwrap();
+    //
+    // let mut file = File::create(output_filename).expect("Failed to open file");
+    // file.write(parsed_classes_data.as_bytes())
+    //     .expect("error writing to the file");
+    // println!("Successfully written to the file : {}", output_filename);
 }
-

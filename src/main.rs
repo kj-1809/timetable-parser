@@ -1,7 +1,7 @@
 mod json_parser;
 mod model;
 mod database;
-
+mod helpers;
 
 use dotenv::dotenv;
 
@@ -9,7 +9,9 @@ use dotenv::dotenv;
 async fn main() -> Result<(), Box<dyn std::error::Error>>{
     dotenv().ok();
 
-    let mut group_sizes: Vec<u32> = vec![8, 8, 5, 5, 5, 5, 5, 5, 5, 5];
+    // was mutable before
+    let group_sizes: Vec<u32> = vec![8, 8, 5, 5, 5, 5, 5, 5, 5, 5];
+    // end
     let row_start = 3;
     let row_end = 143;
     let col_start = 3;
@@ -20,16 +22,21 @@ async fn main() -> Result<(), Box<dyn std::error::Error>>{
 
     let pool = database::init_db().await.unwrap();
     
-    // json_parser::parse_timetable(
-    //     &group_sizes,
-    //     row_start,
-    //     row_end,
-    //     col_start,
-    //     col_end,
-    //     worksheet_name,
-    //     output_filename,
-    //     excel_filename,
-    // );
+    let mut classes_data = json_parser::parse_timetable(
+        &group_sizes,
+        row_start,
+        row_end,
+        col_start,
+        col_end,
+        worksheet_name,
+        output_filename,
+        excel_filename,
+    );
+
+    helpers::cleanup(&mut classes_data);
+
+    database::create_groups(&classes_data, &pool).await?;
+    database::create_classes(&classes_data, &pool).await?;
 
     // json_parser::parse_timetable(
     //     &group_sizes,
