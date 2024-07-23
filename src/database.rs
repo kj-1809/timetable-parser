@@ -45,13 +45,13 @@ pub async fn create_groups(
     }
 
     for course in courses.iter() {
-        let query_string = format!("INSERT INTO courses(Name) values (\"{}\")", course);
+        let query_string = format!("INSERT INTO course(Name) values (\"{}\")", course);
         println!("{}", query_string);
         sqlx::query(&query_string).execute(pool).await?;
     }
 
     for group in group_names.iter() {
-        let query_string = format!("INSERT INTO class_groups(Name) values (\"{}\")", group);
+        let query_string = format!("INSERT INTO class_group(Name) values (\"{}\")", group);
         println!("{}", query_string);
         sqlx::query(&query_string).execute(pool).await?;
     }
@@ -76,7 +76,7 @@ pub async fn create_classes(
         for (day, classes) in timetable.iter() {
             for class in classes.iter() {
                 let query_string = format!(
-                    r#"INSERT INTO classes(course_name, location, professor,type,  group_name, slot, day) values ("{}", "{}", "{}", "{}", "{}", "{}", "{}")"#,
+                    r#"INSERT INTO detail_class(course_name, location, professor,type,  group_name, slot, day) values ("{}", "{}", "{}", "{}", "{}", "{}", "{}")"#,
                     class.name[0..6].to_string(),
                     class.location,
                     class.professor,

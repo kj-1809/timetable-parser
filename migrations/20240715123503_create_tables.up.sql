@@ -1,8 +1,8 @@
-CREATE TABLE class_groups(
+CREATE TABLE class_group(
 	name varchar(50) PRIMARY KEY
 );
 
-CREATE TABLE courses(
+CREATE TABLE course(
 	name varchar(50) PRIMARY KEY
 );
 
@@ -12,17 +12,16 @@ CREATE TABLE group_to_courses(
 
 	PRIMARY KEY (group_name, course_name),
 
-	FOREIGN KEY (group_name) REFERENCES class_groups(name)
-		ON DELETE CASCADE
+	FOREIGN KEY (group_name) REFERENCES class_group(name)
+		-- ON DELETE CASCADE
 		ON UPDATE CASCADE,
 
-	FOREIGN KEY (course_name) REFERENCES courses(name)
-		ON DELETE CASCADE
+	FOREIGN KEY (course_name) REFERENCES course(name)
+		-- ON DELETE CASCADE
 		ON UPDATE CASCADE
-
 );
 
-CREATE TABLE classes (
+CREATE TABLE detail_class (
 	id int AUTO_INCREMENT PRIMARY KEY,	
 	course_name varchar(50),
 	location varchar(50),
@@ -32,11 +31,11 @@ CREATE TABLE classes (
 	slot int,
 	day varchar(50),
 	
-	FOREIGN KEY (course_name) REFERENCES courses(name)
-		ON DELETE CASCADE
+	FOREIGN KEY (course_name) REFERENCES course(name)
+		-- ON DELETE CASCADE
 		ON UPDATE CASCADE,
 
-	FOREIGN KEY (group_name) REFERENCES class_groups(name)
-		ON DELETE CASCADE
+	FOREIGN KEY (group_name) REFERENCES class_group(name)
+		-- ON DELETE CASCADE
 		ON UPDATE CASCADE
 )
