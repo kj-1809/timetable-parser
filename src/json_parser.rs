@@ -84,7 +84,7 @@ pub fn parse_timetable(
                 .insert(get_day_string.get(&day).unwrap().to_string(), Vec::new());
         }
 
-       while row < n {
+        while row < n {
             let day: u32 = (row as u32 - 1) / 28;
             let day_string = get_day_string.get(&day).unwrap().to_string();
             let adjusted_row = (row as u32 - 1) % 28;
@@ -92,7 +92,6 @@ pub fn parse_timetable(
             if matrix[row][j] != "0" {
                 let class_type = matrix[row][j].chars().rev().next().unwrap();
                 let classes_for_the_day = classes_for_the_subgroup.get_mut(&day_string).unwrap();
-
 
                 if class_type == 'T' {
                     if matrix[row + 1][j + 1] != "0" {
@@ -196,9 +195,38 @@ pub fn parse_timetable(
                         });
                     }
                     row += 4;
-                }
+                } else if class_type == 'G' {
+                    for sub_group in &groups[current_group] {
+                        let classes_for_subgroup =
+                            classes_data.get_mut(&sub_group.clone()).unwrap();
+                        let classes_for_subgroup_day =
+                            classes_for_subgroup.get_mut(&day_string).unwrap();
 
-                else {
+                        let mut new_name = matrix[row][j].clone();
+                        new_name.pop();
+                        new_name.push('P');
+
+                        classes_for_subgroup_day.push(Class {
+                            name: new_name.clone(),
+                            location: matrix[row + 1][j].clone(),
+                            professor: matrix[row + 2][j].clone(),
+                            slot: ((adjusted_row) / 2),
+                        });
+                        classes_for_subgroup_day.push(Class {
+                            name: new_name.clone(),
+                            location: matrix[row + 1][j].clone(),
+                            professor: matrix[row + 2][j].clone(),
+                            slot: ((adjusted_row) / 2) + 1,
+                        });
+                        classes_for_subgroup_day.push(Class {
+                            name: new_name.clone(),
+                            location: matrix[row + 1][j].clone(),
+                            professor: matrix[row + 2][j].clone(),
+                            slot: ((adjusted_row) / 2) + 2,
+                        });
+                    }
+                    row += 6;
+                } else {
                     std::panic!("Shit data !")
                 }
             } else {
