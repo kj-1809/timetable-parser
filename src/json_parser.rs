@@ -196,7 +196,9 @@ pub fn parse_timetable(
                         });
                     }
                     row += 4;
-                } else {
+                }
+
+                else {
                     std::panic!("Shit data !")
                 }
             } else {

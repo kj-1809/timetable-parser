@@ -8,17 +8,20 @@ use dotenv::dotenv;
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>>{
     dotenv().ok();
-
+    // year 1
     // was mutable before
-    let group_sizes: Vec<u32> = vec![8, 8, 5, 5, 5, 5, 5, 5, 5, 5];
+    // let group_sizes: Vec<u32> = vec![8, 8, 5, 5, 5, 5, 5, 5, 5, 5];
     // end
-    let row_start = 3;
-    let row_end = 143;
-    let col_start = 3;
-    let col_end = 114;
-    let worksheet_name = "1ST YEAR A";
-    let output_filename = "classes_data1A.json";
-    let excel_filename = "dataset.xlsx";
+    // let row_start = 3;
+    // let row_end = 143;
+    // let col_start = 3;
+    // let col_end = 114;
+    // let worksheet_name = "1ST YEAR A";
+    // let output_filename = "classes_data1A.json";
+    // let excel_filename = "dataset.xlsx";
+
+    // year 2
+    
 
     let pool = database::init_db().await.unwrap();
     
