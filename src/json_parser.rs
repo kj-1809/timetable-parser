@@ -10,7 +10,6 @@ pub fn parse_timetable(
     col_start: usize,
     col_end: usize,
     worksheet_name: &str,
-    output_filename: &str,
     excel_filename: &str,
 ) -> HashMap<String, HashMap<String, Vec<Class>>> {
     let mut matrix: Vec<Vec<String>> = Vec::new();
@@ -45,9 +44,14 @@ pub fn parse_timetable(
             matrix.push(temp);
         }
     }
-
+        
     let n = matrix.len();
     let m = matrix[0].len();
+
+
+    println!("{:?}", matrix[0]);
+    println!("{:?}", matrix[n-1]);
+
 
     // get the groups
     let mut pos = 0;
@@ -86,14 +90,19 @@ pub fn parse_timetable(
 
         while row < n {
             let day: u32 = (row as u32 - 1) / 28;
+
             let day_string = get_day_string.get(&day).unwrap().to_string();
             let adjusted_row = (row as u32 - 1) % 28;
+
 
             if matrix[row][j] != "0" {
                 let class_type = matrix[row][j].chars().rev().next().unwrap();
                 let classes_for_the_day = classes_for_the_subgroup.get_mut(&day_string).unwrap();
 
+                println!("{}", matrix[row][j]);
+                // normal tutorial
                 if class_type == 'T' {
+                    // single class
                     if matrix[row + 1][j + 1] != "0" {
                         classes_for_the_day.push(Class {
                             name: matrix[row][j].clone(),
@@ -103,6 +112,7 @@ pub fn parse_timetable(
                         });
                         row += 2;
                     } else {
+                        // 2 classes
                         classes_for_the_day.push(Class {
                             name: matrix[row][j].clone(),
                             location: matrix[row + 1][j].clone(),
@@ -118,6 +128,7 @@ pub fn parse_timetable(
                         row += 4;
                     }
                 } else if class_type == 'P' {
+                    // normal practical
                     if matrix[row + 3][j] == "0" {
                         classes_for_the_day.push(Class {
                             name: matrix[row][j].clone(),
@@ -155,6 +166,7 @@ pub fn parse_timetable(
                     }
                     row += 4;
                 } else if class_type == 'L' {
+                    // lecture for group students
                     for sub_group in &groups[current_group] {
                         let classes_for_subgroup =
                             classes_data.get_mut(&sub_group.clone()).unwrap();
@@ -171,6 +183,7 @@ pub fn parse_timetable(
                     }
                     row += 2;
                 } else if class_type == 'F' {
+                    // practical for the entire group
                     for sub_group in &groups[current_group] {
                         let classes_for_subgroup =
                             classes_data.get_mut(&sub_group.clone()).unwrap();
@@ -196,6 +209,7 @@ pub fn parse_timetable(
                     }
                     row += 4;
                 } else if class_type == 'G' {
+                    // 3 class practical for subgroup
                     for sub_group in &groups[current_group] {
                         let classes_for_subgroup =
                             classes_data.get_mut(&sub_group.clone()).unwrap();
@@ -226,7 +240,13 @@ pub fn parse_timetable(
                         });
                     }
                     row += 6;
-                } else {
+                } else if class_type == 'H'{
+                    // tut for the entire group
+                    
+                }
+                else{
+                    println!("{}", matrix[row][j]);                  
+                    println!("{}, {}, {}", class_type, row, j);
                     std::panic!("Shit data !")
                 }
             } else {

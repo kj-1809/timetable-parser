@@ -31,8 +31,9 @@ pub async fn create_groups(
         let mut set: HashSet<String> = HashSet::new();
         for (_, classes) in timetable_for_the_group.iter() {
             for class in classes {
-                set.insert(class.name[0..6].to_string());
-                courses.insert(class.name[0..6].to_string());
+                let class_len = class.name.len();
+                set.insert(class.name[0..(class_len-1)].to_string());
+                courses.insert(class.name[0..(class_len-1)].to_string());
             }
         }
 
@@ -75,12 +76,13 @@ pub async fn create_classes(
     for (group_name, timetable) in classes_data.iter() {
         for (day, classes) in timetable.iter() {
             for class in classes.iter() {
+                let name_len = class.name.len();
                 let query_string = format!(
                     r#"INSERT INTO detail_class(course_name, location, professor,type,  group_name, slot, day) values ("{}", "{}", "{}", "{}", "{}", "{}", "{}")"#,
-                    class.name[0..6].to_string(),
+                    class.name[0..(name_len - 1)].to_string(),
                     class.location,
                     class.professor,
-                    class.name.chars().nth(6).unwrap(),
+                    class.name.chars().nth(name_len - 1).unwrap(),
                     group_name,
                     class.slot,
                     day
