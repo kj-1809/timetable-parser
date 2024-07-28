@@ -44,14 +44,12 @@ pub fn parse_timetable(
             matrix.push(temp);
         }
     }
-        
+
     let n = matrix.len();
     let m = matrix[0].len();
 
-
     println!("{:?}", matrix[0]);
-    println!("{:?}", matrix[n-1]);
-
+    println!("{:?}", matrix[n - 1]);
 
     // get the groups
     let mut pos = 0;
@@ -93,7 +91,6 @@ pub fn parse_timetable(
 
             let day_string = get_day_string.get(&day).unwrap().to_string();
             let adjusted_row = (row as u32 - 1) % 28;
-
 
             if matrix[row][j] != "0" {
                 let class_type = matrix[row][j].chars().rev().next().unwrap();
@@ -182,6 +179,18 @@ pub fn parse_timetable(
                         });
                     }
                     row += 2;
+                } else if class_type == 'M' {
+                    // lecture for the subgroup
+                    let mut new_name = matrix[row][j].clone();
+                    new_name.pop();
+                    new_name.push('L');
+                    classes_for_the_day.push(Class {
+                        name: new_name,
+                        location: matrix[row + 1][j].clone(),
+                        professor: matrix[row + 1][j + 1].clone(),
+                        slot: (adjusted_row) / 2,
+                    });
+                    row += 2;
                 } else if class_type == 'F' {
                     // practical for the entire group
                     for sub_group in &groups[current_group] {
@@ -240,12 +249,10 @@ pub fn parse_timetable(
                         });
                     }
                     row += 6;
-                } else if class_type == 'H'{
+                } else if class_type == 'H' {
                     // tut for the entire group
-                    
-                }
-                else{
-                    println!("{}", matrix[row][j]);                  
+                } else {
+                    println!("{}", matrix[row][j]);
                     println!("{}, {}, {}", class_type, row, j);
                     std::panic!("Shit data !")
                 }
