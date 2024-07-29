@@ -31,14 +31,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // let excel_filename = "dataset.xlsx";
     // let group_sizes: Vec<u32> = vec![2, 2, 3, 3, 2, 1, 4, 1, 3, 3];
 
-    // YEAR 2 - A     
+    // YEAR 2 - B     
     
-    let group_sizes: Vec<u32> = vec![8, 8, 8, 5, 5, 5, 5, 5, 4];
-    let row_start = 5;
+    let group_sizes: Vec<u32> = vec![8, 5, 5, 5, 5, 5, 5];
+    let row_start = 6;
     let row_end = 145;
     let col_start = 4;
-    let col_end = 109;
-    let worksheet_name = "1ST YEAR A";
+    let col_end = 79;
+    let worksheet_name = "2ND YEAR B";
     let excel_filename = "dataset.xlsx";
 
 
