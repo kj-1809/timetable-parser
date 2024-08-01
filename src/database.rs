@@ -46,20 +46,20 @@ pub async fn create_groups(
     }
 
     for course in courses.iter() {
-        let query_string = format!("INSERT INTO course(Name) values (\"{}\")", course);
+        let query_string = format!("INSERT IGNORE INTO course(Name) values (\"{}\")", course);
         println!("{}", query_string);
         sqlx::query(&query_string).execute(pool).await?;
     }
 
     for group in group_names.iter() {
-        let query_string = format!("INSERT INTO class_group(Name) values (\"{}\")", group);
+        let query_string = format!("INSERT IGNORE INTO class_group(Name) values (\"{}\")", group);
         println!("{}", query_string);
         sqlx::query(&query_string).execute(pool).await?;
     }
 
     for x in group_to_courses {
         let query_string = format!(
-            "INSERT INTO group_to_courses values (\"{}\", \"{}\")",
+            "INSERT IGNORE INTO group_to_courses values (\"{}\", \"{}\")",
             x.group_name, x.course_name
         );
         println!("{}", query_string);
@@ -73,6 +73,9 @@ pub async fn create_classes(
     classes_data: &HashMap<String, HashMap<String, Vec<Class>>>,
     pool: &Pool<MySql>,
 ) -> Result<(), sqlx::Error> {
+
+    let mut cnt= 0;
+
     for (group_name, timetable) in classes_data.iter() {
         for (day, classes) in timetable.iter() {
             for class in classes.iter() {
@@ -89,9 +92,12 @@ pub async fn create_classes(
                 );
                 println!("{}", query_string);
                 sqlx::query(&query_string).execute(pool).await?;
+                cnt += 1;
             }
         }
     }
+
+    println!("cnt : {cnt}");
 
     return Ok(());
 }

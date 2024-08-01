@@ -17,7 +17,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // let col_end = 109;
     // let worksheet_name = "1ST YEAR A";
     // let excel_filename = "dataset.xlsx";
-    
 
     // year 1 - B
 
@@ -31,16 +30,45 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // let excel_filename = "dataset.xlsx";
     // let group_sizes: Vec<u32> = vec![2, 2, 3, 3, 2, 1, 4, 1, 3, 3];
 
-    // YEAR 2 - B     
-    
-    let group_sizes: Vec<u32> = vec![8, 5, 5, 5, 5, 5, 5];
+    // YEAR 2 - B - COE
+
+    // let group_sizes: Vec<u32> = vec![8, 5, 5, 5, 5, 5, 5];
+    // let row_start = 6;
+    // let row_end = 145;
+    // let col_start = 4;
+    // let col_end = 79;
+    // let worksheet_name = "2ND YEAR B";
+    // let excel_filename = "dataset.xlsx";
+
+    // YEAR 2 - B - CSE
+
+    // let group_sizes: Vec<u32> = vec![6, 6];
+    // let row_start = 6;
+    // let row_end = 145;
+    // let col_start = 88;
+    // let col_end = 111;
+    // let worksheet_name = "2ND YEAR B";
+    // let excel_filename = "dataset.xlsx";
+
+    // YEAR - 2 - A COBS
+
+    // let group_sizes: Vec<u32> = vec![3];
+    // let row_start = 6;
+    // let row_end = 145;
+    // let col_start = 74;
+    // let col_end = 79;
+    // let worksheet_name = "2ND YEAR A";
+    // let excel_filename = "dataset.xlsx";
+
+    // YEAR - 2 - B ENC
+
+    let group_sizes: Vec<u32> = vec![4, 4, 4];
     let row_start = 6;
     let row_end = 145;
-    let col_start = 4;
-    let col_end = 79;
+    let col_start = 142;
+    let col_end = 165;
     let worksheet_name = "2ND YEAR B";
     let excel_filename = "dataset.xlsx";
-
 
     let mut classes_data = json_parser::parse_timetable(
         &group_sizes,
